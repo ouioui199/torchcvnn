@@ -483,27 +483,6 @@
 
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">_no_grad_normal_</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span></div>
 
-
-
-<div class="viewcode-block" id="complex_constant_">
-<a class="viewcode-back" href="../../../../modules/init.html#torchcvnn.nn.modules.initialization.complex_constant_">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">complex_constant_</span><span class="p">(</span>
-    <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> 
-    <span class="n">val</span><span class="p">:</span> <span class="nb">float</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Fill the input Tensor with the value :math:`\text{val}`.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        tensor: an n-dimensional `torch.Tensor`</span>
-<span class="sd">        val: the value to fill the tensor with</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; w = torch.empty(3, 5)</span>
-<span class="sd">        &gt;&gt;&gt; nn.init.constant_(w, 0.3)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="n">val</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">val</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">_no_grad_fill_</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">),</span> <span class="n">val</span><span class="p">)</span></div>
-
 </pre></div>
         </article>
       </div>
