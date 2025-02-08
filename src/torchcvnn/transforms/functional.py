@@ -22,6 +22,7 @@
 
 # Standard imports
 from typing import Tuple, Dict
+from types import ModuleType
 
 # External imports
 import torch
@@ -75,6 +76,39 @@ def check_input(x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
     if len(x.shape) == 2:
         return x[np.newaxis, :, :]
     return x
+
+
+def log_normalize_amplitude(
+    x: np.ndarray | torch.Tensor, 
+    backend: ModuleType, 
+    keep_phase: bool,
+    min_value: float,
+    max_value: float,
+) -> np.ndarray | torch.Tensor:
+    """
+    Normalize the amplitude of a complex signal with logarithmic scaling.
+    
+    Args:
+        x: Input array or tensor containing complex numbers. The type can be either numpy ndarray or PyTorch Tensor.
+        backend: Module providing mathematical functions, allowing compatibility with numpy or PyTorch.
+        keep_phase: Boolean indicating whether to retain the original phase of the input signal.
+        max_value: Maximum amplitude value for normalization.
+        min_value: Minimum amplitude value for normalization.
+
+    Returns:
+        A numpy ndarray or torch.Tensor containing the log-normalized amplitude, optionally with the original phase.
+    """
+    assert backend.__name__ in ["numpy", "torch"], "Backend must be numpy or torch"
+    amplitude = backend.abs(x)
+    phase = backend.angle(x)
+    amplitude = backend.clip(amplitude, min_value, max_value)
+    transformed_amplitude = (
+        backend.log10(amplitude / min_value)
+    ) / (np.log10(max_value / min_value))
+    if keep_phase:
+        return transformed_amplitude * backend.exp(1j * phase)
+    else:
+        return transformed_amplitude
 
 
 def applyfft2_np(x: np.ndarray, axis: Tuple[int, ...]) -> np.ndarray:
