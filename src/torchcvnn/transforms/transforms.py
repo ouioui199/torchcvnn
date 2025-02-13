@@ -67,6 +67,7 @@ class BaseTransform(ABC):
         >>> output = transform(input_data)  # Works with both numpy arrays and torch tensors
     """
     def __init__(self, dtype: str | NoneType = None) -> None:
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         if dtype is not None:
             assert isinstance(dtype, str), "dtype should be a string"
             assert dtype in ["float32", "float64", "complex64", "complex128"], "dtype should be one of float32, float64, complex64, complex128"
@@ -79,6 +80,7 @@ class BaseTransform(ABC):
         if isinstance(x, np.ndarray):
             return self.__call_numpy__(x)
         elif isinstance(x, torch.Tensor):
+            
             return self.__call_torch__(x)
 
     @abstractmethod
@@ -630,6 +632,27 @@ class Unsqueeze(BaseTransform):
     
     def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
         return x.unsqueeze(dim=self.dim)
+    
+
+class HWC2CHW(BaseTransform):
+    """Converts an input array/tensor from HWC to CHW format.
+
+    This transform reorders the dimensions of the input array/tensor from Height x Width x Channel
+    to Channel x Height x Width format.
+
+    Returns:
+        np.ndarray | torch.Tensor: Input with dimensions reordered to Channel x Height x Width.
+
+    Example:
+        >>> transform = HWC2CHW()
+        >>> x = torch.randn(3, 4, 5)  # Shape (3, 4, 5)
+        >>> y = transform(x)          # Shape (5, 3, 4)
+    """
+    def __call_numpy__(self, x: np.ndarray) -> np.ndarray:
+        return np.moveaxis(x, -1, 0)
+    
+    def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
+        return x.permute(2, 0, 1)
 
 
 class ToTensor(BaseTransform):
