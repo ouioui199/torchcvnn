@@ -300,18 +300,19 @@ class PadIfNeeded(BaseTransform):
 
     This transform pads images that are smaller than given minimum dimensions by adding
     padding according to the specified border mode. The padding is added symmetrically
-    on both sides to reach the minimum dimensions.
+    on both sides to reach the minimum dimensions when possible. If the minimum required 
+    dimension (height or width) is uneven, the right and the bottom sides will receive 
+    an extra padding of 1 compared to the left and the top sides.
 
     Args:
-        min_height (int): Minimum required height. Images shorter than this will be
         min_height (int): Minimum height requirement for the image
         min_width (int): Minimum width requirement for the image
-        border_mode (str): Type of padding to apply ('constant', 'reflect', etc.)
-        dtype (str | NoneType): Data type for the output (optional)
+        border_mode (str): Type of padding to apply ('constant', 'reflect', etc.). Default is 'constant'.
+        pad_value (float): Value for constant padding (if applicable). Default is 0.
 
     Returns:
-        np.ndarray | torch.Tensor: Padded image with dimensions at least min_height x min_width.
-            Return type matches input type.
+        np.ndarray | torch.Tensor: Padded image with dimensions at least min_height x min_width. 
+        Original image if no padding is required.
 
     Example:
         >>> transform = PadIfNeeded(min_height=256, min_width=256)
@@ -334,6 +335,7 @@ class PadIfNeeded(BaseTransform):
     
     def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
         return F.padifneeded(x, self.min_height, self.min_width, self.border_mode, self.pad_value)
+
 
 
 class CenterCrop(BaseTransform):
@@ -598,7 +600,7 @@ class PolSAR(BaseTransform):
         return self._convert_channels(x, self.out_channel, torch)
     
     def __call__(self, x: np.ndarray | torch.Tensor | Dict[str, np.ndarray]) -> np.ndarray | torch.Tensor:
-        x = F._polsar_dict_to_array(x)
+        x = F.polsar_dict_to_array(x)
         return super().__call__(x)
 
 
