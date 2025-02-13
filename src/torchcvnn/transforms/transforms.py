@@ -67,7 +67,6 @@ class BaseTransform(ABC):
         >>> output = transform(input_data)  # Works with both numpy arrays and torch tensors
     """
     def __init__(self, dtype: str | NoneType = None) -> None:
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         if dtype is not None:
             assert isinstance(dtype, str), "dtype should be a string"
             assert dtype in ["float32", "float64", "complex64", "complex128"], "dtype should be one of float32, float64, complex64, complex128"
@@ -80,7 +79,6 @@ class BaseTransform(ABC):
         if isinstance(x, np.ndarray):
             return self.__call_numpy__(x)
         elif isinstance(x, torch.Tensor):
-            
             return self.__call_torch__(x)
 
     @abstractmethod
