@@ -385,41 +385,53 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 
+
 <div class="viewcode-block" id="LogAmplitude">
 <a class="viewcode-back" href="../../../modules/_autosummary/torchcvnn.transforms.LogAmplitude.html#torchcvnn.transforms.LogAmplitude">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LogAmplitude</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Transform the amplitude of a complex tensor to a log scale between a min and max value.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LogAmplitude</span><span class="p">(</span><span class="n">BaseTransform</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This transform applies a logarithmic scaling to the amplitude/magnitude of complex values</span>
+<span class="sd">    while optionally preserving the phase information. The amplitude is first clipped to </span>
+<span class="sd">    [min_value, max_value] range, then log10-transformed and normalized to [0,1] range.</span>
 
-<span class="sd">    After this transform, the phases are the same but the magnitude is log transformed and</span>
-<span class="sd">    scaled in [0, 1]</span>
+<span class="sd">    The transformation follows these steps:</span>
+<span class="sd">    1. Extract amplitude and phase from complex input</span>
+<span class="sd">    2. Clip amplitude between min_value and max_value </span>
+<span class="sd">    3. Apply log10 transform and normalize to [0,1]</span>
+<span class="sd">    4. Optionally recombine with original phase</span>
 
-<span class="sd">    Arguments:</span>
-<span class="sd">        min_value: The minimum value of the amplitude range to clip</span>
-<span class="sd">        max_value: The maximum value of the amplitude range to clip</span>
+<span class="sd">    Args:</span>
+<span class="sd">        min_value (int | float, optional): Minimum amplitude value for clipping. </span>
+<span class="sd">            Values below this will be clipped up. Defaults to 0.02.</span>
+<span class="sd">        max_value (int | float, optional): Maximum amplitude value for clipping.</span>
+<span class="sd">            Values above this will be clipped down. Defaults to 40.</span>
+<span class="sd">        keep_phase (bool, optional): Whether to preserve phase information.</span>
+<span class="sd">            If True, returns complex output with transformed amplitude and original phase.</span>
+<span class="sd">            If False, returns just the transformed amplitude. Defaults to True.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray | torch.Tensor: Transformed tensor with same shape as input.</span>
+<span class="sd">            If keep_phase=True: Complex tensor with log-scaled amplitude and original phase</span>
+<span class="sd">            If keep_phase=False: Real tensor with just the log-scaled amplitude</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; transform = LogAmplitude(min_value=0.01, max_value=100)</span>
+<span class="sd">        &gt;&gt;&gt; output = transform(input_tensor)  # Transforms amplitudes to log scale [0,1]</span>
+<span class="sd">    Note:</span>
+<span class="sd">        The transform works with both NumPy arrays and PyTorch tensors through</span>
+<span class="sd">        separate internal implementations (__call_numpy__ and __call_torch__).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
 <div class="viewcode-block" id="LogAmplitude.__init__">
 <a class="viewcode-back" href="../../../modules/_autosummary/torchcvnn.transforms.LogAmplitude.html#torchcvnn.transforms.LogAmplitude.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">max_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">keep_phase</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">min_value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="n">max_value</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="n">max_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keep_phase</span> <span class="o">=</span> <span class="n">keep_phase</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="n">new_tensor</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tensor</span><span class="p">):</span>
-            <span class="n">amplitude</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
-            <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
-            <span class="n">amplitude</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">amplitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">)</span>
-            <span class="n">transformed_amplitude</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">amplitude</span><span class="p">)</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">]))</span>
-            <span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
-                <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">]))</span>
-                <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">]))</span>
-            <span class="p">)</span>
-            <span class="n">new_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transformed_amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">new_tensor</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__call_numpy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">log_normalize_amplitude</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_phase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">)</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">__call_torch__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">log_normalize_amplitude</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_phase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">)</span></div>
+
 
 
 
