@@ -547,7 +547,7 @@
             <span class="c1"># Or for testing but using the batch stats for centering/scaling</span>
 
             <span class="c1"># Compute the means</span>
-            <span class="n">mus</span> <span class="o">=</span> <span class="n">xc</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># num_features means</span>
+            <span class="n">mus</span> <span class="o">=</span> <span class="n">xc</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># num_features means</span>
 
             <span class="c1"># Center the xc</span>
             <span class="n">xc_centered</span> <span class="o">=</span> <span class="n">xc</span> <span class="o">-</span> <span class="n">mus</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># num_features, BxHxW</span>
@@ -576,6 +576,7 @@
         <span class="c1"># So that the batch matrix multiply works as expected</span>
         <span class="c1"># where invsqrt_covs is (C, 2, 2)</span>
         <span class="n">outz</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">invsqrt_covs</span><span class="p">,</span> <span class="n">xc_centered</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">outz</span> <span class="o">=</span> <span class="n">outz</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>  <span class="c1"># num_features, 2, BxHxW</span>
 
         <span class="c1"># Shift by beta and scale by gamma</span>
         <span class="c1"># weight is (num_features, 2, 2) real valued</span>
