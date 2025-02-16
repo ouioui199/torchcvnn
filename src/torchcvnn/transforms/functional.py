@@ -137,12 +137,12 @@ def applyifft2_np(x: np.ndarray, axis: Tuple[int, ...]) -> np.ndarray:
     return np.fft.ifft2(np.fft.ifftshift(x, axes=axis), axes=axis)
 
 
-def applyfft2_torch(x: torch.Tensor, dim: Tuple[int, ...]) -> torch.Tensor:
+def applyfft2_torch(x: torch.Tensor, dim: Tuple[int, ...] = (-2, -1)) -> torch.Tensor:
     """Apply 2D Fast Fourier Transform to image.
     
     Args:
         x (np.ndarray): Input array to apply FFT to
-        axis (Tuple[int, ...]): Axes over which to compute the FFT
+        dim (Tuple[int, ...]): Dimensions over which to compute the FFT. Default is (-2, -1).
         
     Returns:
         torch.Tensor: The Fourier transformed array
@@ -150,12 +150,12 @@ def applyfft2_torch(x: torch.Tensor, dim: Tuple[int, ...]) -> torch.Tensor:
     return torch.fft.fftshift(torch.fft.fft2(x, dim=dim), dim=dim)
 
 
-def applyifft2_torch(x: torch.Tensor, dim: Tuple[int, ...]) -> torch.Tensor:
+def applyifft2_torch(x: torch.Tensor, dim: Tuple[int, ...] = (-2, -1)) -> torch.Tensor:
     """Apply 2D inverse Fast Fourier Transform to image.
     
     Args:
         x (torch.Tensor): Input tensor to apply IFFT to
-        axis (Tuple[int, ...]): Axes over which to compute the IFFT
+        dim (Tuple[int, ...]): Dimensions over which to compute the IFFT. Default is (-2, -1).
         
     Returns:
         torch.Tensor: The inverse Fourier transformed array
@@ -226,7 +226,7 @@ def padifneeded(
         >>> padded.shape
         torch.Size([3, 64, 64])
     """
-    _, h, w = x.shape
+    h, w = x.shape[-2], x.shape[-1]
     # Calculate padding sizes
     top_pad, bottom_pad = get_padding(h, min_height)
     left_pad, right_pad = get_padding(w, min_width)
@@ -260,26 +260,34 @@ def center_crop(x: np.ndarray | torch.Tensor, height: int, width: int) -> np.nda
     """
     Center crops an image to the specified dimensions.
 
-    This function takes an image and crops it to the specified height and width, 
-    centered around the middle of the image. If the requested dimensions are larger 
-    than the image, it will use the maximum possible size.
+    This function crops an image to the specified height and width around its center.
+    Works for both numpy arrays and PyTorch tensors with 2D (H,W), 3D (C,H,W), 4D (B,C,H,W) or 
+    5D (B,C,D,H,W) shapes.
 
     Args:
-        x (Union[np.ndarray, torch.Tensor]): Input image tensor/array with shape (C, H, W)
-        height (int): Desired height of the cropped image
-        width (int): Desired width of the cropped image
+        x (np.ndarray | torch.Tensor): Input array/tensor of shape (..., H, W)
+        height (int): Target height after cropping
+        width (int): Target width after cropping
 
     Returns:
-        Union[np.ndarray, torch.Tensor]: Center cropped image with shape (C, height, width)
+        np.ndarray | torch.Tensor: Center cropped image with dimensions matching height/width
 
     Example:
         >>> img = torch.randn(3, 100, 100)  # RGB image 100x100
         >>> cropped = center_crop(img, 60, 60)  # Returns center 60x60 crop
         >>> cropped.shape
         torch.Size([3, 60, 60])
+
+    Raises:
+        ValueError: If input does not have 2, 3 or 4 dimensions
     """
-    l_h = max(0, x.shape[0] // 2 - height // 2)
-    l_w = max(0, x.shape[0] // 2 - width // 2)
+    if x.ndim < 2:
+        raise ValueError("Input must have at least 2 dimensions")
+    
+    l_h = max(0, x.shape[-2] // 2 - height // 2)
+    l_w = max(0, x.shape[-1] // 2 - width // 2) #recheck dimensions
     r_h = l_h + height
     r_w = l_w + width
-    return x[:, l_h:r_h, l_w:r_w]
+    
+    slices = (..., slice(l_h, r_h), slice(l_w, r_w))
+    return x[slices]
