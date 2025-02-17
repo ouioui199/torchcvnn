@@ -140,6 +140,8 @@ class UpsampleFFT(nn.Module):
         if isinstance(self.size, int):
             self.size = (self.size, self.size)
         self.scale_factor = scale_factor
+        if isinstance(self.scale_factor, int):
+            self.scale_factor = (self.scale_factor, self.scale_factor)
         
     def upsampling(self, z: torch.Tensor) -> torch.Tensor:
         # Apply Discrete Fourier Transform over the last two dimenstions, typically Height and Width
