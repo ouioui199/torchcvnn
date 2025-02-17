@@ -142,6 +142,11 @@ class UpsampleFFT(nn.Module):
         self.scale_factor = scale_factor
         if isinstance(self.scale_factor, int):
             self.scale_factor = (self.scale_factor, self.scale_factor)
+            
+        if isinstance(self.size, Tuple) and len(self.size) != 2:
+            raise ValueError("Size tuple must have two elements")
+        if isinstance(self.scale_factor, Tuple) and len(self.size) != 2:
+            raise ValueError("Scale factor tuple must have two elements")
         
     def upsampling(self, z: torch.Tensor) -> torch.Tensor:
         # Apply Discrete Fourier Transform over the last two dimenstions, typically Height and Width
