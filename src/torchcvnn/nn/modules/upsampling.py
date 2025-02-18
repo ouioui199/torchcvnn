@@ -131,22 +131,21 @@ class UpsampleFFT(nn.Module):
     ) -> None:
         super().__init__()
         
-        if size is None and scale_factor is None:
-            raise ValueError("Either size or scale_factor should be specified")
-        if size is not None and scale_factor is not None:
-            raise ValueError("Only one of size or scale_factor should be specified")
+        # Validate input parameters
+        if not (bool(size) ^ bool(scale_factor)):  # XOR operation
+            raise ValueError("Exactly one of size or scale_factor must be specified")
         
-        self.size = size
-        if isinstance(self.size, int):
-            self.size = (self.size, self.size)
-        self.scale_factor = scale_factor
-        if isinstance(self.scale_factor, int):
-            self.scale_factor = (self.scale_factor, self.scale_factor)
+        # Handle size parameter
+        self.size = tuple([size] * 2) if isinstance(size, int) else size
+
+        # Handle scale_factor parameter
+        if scale_factor is not None:
+            self.scale_factor = (float(scale_factor),) * 2 if isinstance(scale_factor, (int, float)) else scale_factor
             
-        if isinstance(self.size, Tuple) and len(self.size) != 2:
-            raise ValueError("Size tuple must have two elements")
-        if isinstance(self.scale_factor, Tuple) and len(self.size) != 2:
-            raise ValueError("Scale factor tuple must have two elements")
+        # Validate tuple lengths
+        for param, name in [(self.size, 'size'), (self.scale_factor, 'scale_factor')]:
+            if param is not None and isinstance(param, tuple) and len(param) != 2:
+                raise ValueError(f"{name} must be an int or a tuple of length 2")
         
     def upsampling(self, z: torch.Tensor) -> torch.Tensor:
         # Apply Discrete Fourier Transform over the last two dimenstions, typically Height and Width
