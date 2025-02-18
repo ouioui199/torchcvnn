@@ -153,6 +153,8 @@ class UpsampleFFT(nn.Module):
         z = F.applyfft2_torch(z)
         # Zero pad the input tensor to the desired size
         z = F.padifneeded(z, self.size[0], self.size[1])
+        # Center crop the spectrum to the target size
+        z = F.center_crop(z, self.size[0], self.size[1])
         # Apply Inverse Discrete Fourier Transform over the last two dimensions
         z = F.applyifft2_torch(z)
         return z
