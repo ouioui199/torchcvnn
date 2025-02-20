@@ -108,8 +108,7 @@ def log_normalize_amplitude(
     ) / (np.log10(max_value / min_value))
     if keep_phase:
         return transformed_amplitude * backend.exp(1j * phase)
-    else:
-        return transformed_amplitude
+    return transformed_amplitude
 
 
 def applyfft2_np(x: np.ndarray, axis: Tuple[int, ...]) -> np.ndarray:
