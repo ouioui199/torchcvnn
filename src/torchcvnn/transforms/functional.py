@@ -159,8 +159,10 @@ def log_normalize_amplitude_channelwise(
     assert len(min_value) == x.shape[0], "min_value length must match number of channels"
     assert len(max_value) == x.shape[0], "max_value length must match number of channels"
     
+    if keep_phase:
+        phase = backend.angle(x)
+        compute_absolute = True
     amplitude = backend.abs(x) if compute_absolute else x
-    phase = backend.angle(x) if keep_phase else None
     
     # Normalize all channels simultaneously
     amplitude = backend.clip(amplitude, min_value, max_value)
