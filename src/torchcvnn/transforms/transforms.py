@@ -140,12 +140,12 @@ class LogAmplitude(BaseTransform):
     def _validate_value(
         self, 
         value: float | Sequence[float]
-    ) -> float | Sequence[float]:
+    ) -> float | np.ndarray:
         """Validate and convert input values."""
         if self.channelwise:
             if not isinstance(value, (float, Sequence)):
                 raise TypeError(f"Expected floating number or sequence, got {type(value)}")
-            return value
+            return np.array(value)
         return value
 
     def __call_numpy__(self, x: np.ndarray) -> np.ndarray:
