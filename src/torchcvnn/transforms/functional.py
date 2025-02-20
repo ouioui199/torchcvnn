@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 # Standard imports
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Sequence
 from types import ModuleType
 
 # External imports
@@ -82,26 +82,35 @@ def check_input(x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
 def log_normalize_amplitude(
     x: np.ndarray | torch.Tensor, 
     backend: ModuleType, 
+    compute_absolute: bool,
     keep_phase: bool,
     min_value: float,
     max_value: float,
 ) -> np.ndarray | torch.Tensor:
     """
-    Normalize the amplitude of a complex signal with logarithmic scaling.
+    Logarithmic amplitude normalization for complex-valued data.
     
+    Normalizes input using log scaling with a global min/max value.
+    Can preserve complex phase information if requested.
+
     Args:
-        x: Input array or tensor containing complex numbers. The type can be either numpy ndarray or PyTorch Tensor.
-        backend: Module providing mathematical functions, allowing compatibility with numpy or PyTorch.
-        keep_phase: Boolean indicating whether to retain the original phase of the input signal.
-        max_value: Maximum amplitude value for normalization.
-        min_value: Minimum amplitude value for normalization.
+        x (np.ndarray | torch.Tensor): Complex-valued input array/tensor
+        backend (ModuleType): Either numpy or torch module 
+        compute_absolute (bool): Whether to compute absolute value of input
+        keep_phase (bool): If True, preserves complex phase information
+        min_value (float): Min value for normalization
+        max_value (float): Max value for normalization
 
     Returns:
-        A numpy ndarray or torch.Tensor containing the log-normalized amplitude, optionally with the original phase.
+        np.ndarray | torch.Tensor: Normalized data with same shape as input
+        
+    Example:
+        >>> x = np.random.complex128((3, 64, 64))
+        >>> normalized = log_normalize_amplitude(x, np, True, True, 1e-5, 1.0)
     """
     assert backend.__name__ in ["numpy", "torch"], "Backend must be numpy or torch"
-    amplitude = backend.abs(x)
-    phase = backend.angle(x)
+    amplitude = backend.abs(x) if compute_absolute else x
+    phase = backend.angle(x) if keep_phase else None
     amplitude = backend.clip(amplitude, min_value, max_value)
     transformed_amplitude = (
         backend.log10(amplitude / min_value)
@@ -109,6 +118,65 @@ def log_normalize_amplitude(
     if keep_phase:
         return transformed_amplitude * backend.exp(1j * phase)
     return transformed_amplitude
+
+
+def log_normalize_amplitude_channelwise(
+    x: np.ndarray | torch.Tensor, 
+    backend: ModuleType, 
+    compute_absolute: bool,
+    keep_phase: bool,
+    min_value: np.ndarray | torch.Tensor,
+    max_value: np.ndarray | torch.Tensor,
+) -> np.ndarray | torch.Tensor:
+    """
+    Channel-wise logarithmic amplitude normalization for complex-valued data.
+    
+    Normalizes each channel independently using log scaling with separate min/max values.
+    Can preserve complex phase information if requested.
+
+    Args:
+        x (np.ndarray | torch.Tensor): Complex-valued input with shape (C,H,W)
+        backend (ModuleType): Either numpy or torch module
+        compute_absolute (bool): Whether to compute absolute value of input
+        keep_phase (bool): If True, preserves complex phase information 
+        min_value (np.ndarray | torch.Tensor): Min value per channel for normalization
+        max_value (np.ndarray | torch.Tensor): Max value per channel for normalization
+
+    Returns:
+        np.ndarray | torch.Tensor: Normalized data with same shape as input
+        
+    Example:
+        >>> x = np.random.complex128((3, 64, 64))
+        >>> mins = [1e-5, 1e-4, 1e-3] # Per-channel min values  
+        >>> maxs = [1.0, 2.0, 3.0] # Per-channel max values
+        >>> normalized = log_normalize_amplitude_channelwise(x, np, True, mins, maxs)
+        
+    Note:
+        - The min_value and max_value arrays must have the same length as the number of channels in the input
+        - If input is real-valued, the absolute value will not be computed.
+    """
+    assert backend.__name__ in ["numpy", "torch"], "Backend must be numpy or torch"
+    assert len(min_value) == x.shape[0], "min_value length must match number of channels"
+    assert len(max_value) == x.shape[0], "max_value length must match number of channels"
+    
+    amplitude = backend.abs(x) if compute_absolute else x
+    phase = backend.angle(x) if keep_phase else None
+    
+    # Convert min/max values to proper array shape for broadcasting
+    if backend.__name__ == "numpy":
+        min_arr = backend.array(min_value).reshape(-1, 1, 1)
+        max_arr = backend.array(max_value).reshape(-1, 1, 1)
+    else:  # torch
+        min_arr = backend.tensor(min_value).reshape(-1, 1, 1)
+        max_arr = backend.tensor(max_value).reshape(-1, 1, 1)
+    
+    # Normalize all channels simultaneously
+    amplitude = backend.clip(amplitude, min_arr, max_arr)
+    normalized = (backend.log10(amplitude / min_arr)) / (np.log10(max_arr / min_arr))
+        
+    if keep_phase:
+        return normalized * backend.exp(1j * phase)
+    return normalized
 
 
 def applyfft2_np(x: np.ndarray, axis: Tuple[int, ...]) -> np.ndarray:
