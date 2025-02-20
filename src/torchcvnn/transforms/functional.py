@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 # Standard imports
-from typing import Tuple, Dict, Sequence
+from typing import Tuple, Dict
 from types import ModuleType
 
 # External imports
@@ -125,8 +125,8 @@ def log_normalize_amplitude_channelwise(
     backend: ModuleType, 
     compute_absolute: bool,
     keep_phase: bool,
-    min_value: np.ndarray | torch.Tensor,
-    max_value: np.ndarray | torch.Tensor,
+    min_value: np.ndarray,
+    max_value: np.ndarray,
 ) -> np.ndarray | torch.Tensor:
     """
     Channel-wise logarithmic amplitude normalization for complex-valued data.
@@ -162,17 +162,9 @@ def log_normalize_amplitude_channelwise(
     amplitude = backend.abs(x) if compute_absolute else x
     phase = backend.angle(x) if keep_phase else None
     
-    # Convert min/max values to proper array shape for broadcasting
-    if backend.__name__ == "numpy":
-        min_arr = backend.array(min_value).reshape(-1, 1, 1)
-        max_arr = backend.array(max_value).reshape(-1, 1, 1)
-    else:  # torch
-        min_arr = backend.tensor(min_value).reshape(-1, 1, 1)
-        max_arr = backend.tensor(max_value).reshape(-1, 1, 1)
-    
     # Normalize all channels simultaneously
-    amplitude = backend.clip(amplitude, min_arr, max_arr)
-    normalized = (backend.log10(amplitude / min_arr)) / (np.log10(max_arr / min_arr))
+    amplitude = backend.clip(amplitude, min_value, max_value)
+    normalized = (backend.log10(amplitude / min_value)) / (np.log10(max_value / min_value))
         
     if keep_phase:
         return normalized * backend.exp(1j * phase)
