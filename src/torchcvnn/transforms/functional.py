@@ -84,8 +84,8 @@ def log_normalize_amplitude(
     backend: ModuleType, 
     compute_absolute: bool,
     keep_phase: bool,
-    min_value: float,
-    max_value: float,
+    min_value: float | np.ndarray | torch.Tensor,
+    max_value: float | np.ndarray | torch.Tensor,
 ) -> np.ndarray | torch.Tensor:
     """
     Logarithmic amplitude normalization for complex-valued data.
@@ -98,8 +98,8 @@ def log_normalize_amplitude(
         backend (ModuleType): Either numpy or torch module 
         compute_absolute (bool): Whether to compute absolute value of input
         keep_phase (bool): If True, preserves complex phase information
-        min_value (float): Min value for normalization
-        max_value (float): Max value for normalization
+        min_value (float | np.ndarray | torch.Tensor): Min value or min value per channel for normalization
+        max_value (float | np.ndarray | torch.Tensor): Max value or min value per channel for normalization
 
     Returns:
         np.ndarray | torch.Tensor: Normalized data with same shape as input
@@ -109,68 +109,20 @@ def log_normalize_amplitude(
         >>> normalized = log_normalize_amplitude(x, np, True, True, 1e-5, 1.0)
     """
     assert backend.__name__ in ["numpy", "torch"], "Backend must be numpy or torch"
-    amplitude = backend.abs(x) if compute_absolute else x
-    phase = backend.angle(x) if keep_phase else None
-    amplitude = backend.clip(amplitude, min_value, max_value)
-    transformed_amplitude = (
-        backend.log10(amplitude / min_value)
-    ) / (np.log10(max_value / min_value))
-    if keep_phase:
-        return transformed_amplitude * backend.exp(1j * phase)
-    return transformed_amplitude
 
-
-def log_normalize_amplitude_channelwise(
-    x: np.ndarray | torch.Tensor, 
-    backend: ModuleType, 
-    compute_absolute: bool,
-    keep_phase: bool,
-    min_value: np.ndarray,
-    max_value: np.ndarray,
-) -> np.ndarray | torch.Tensor:
-    """
-    Channel-wise logarithmic amplitude normalization for complex-valued data.
-    
-    Normalizes each channel independently using log scaling with separate min/max values.
-    Can preserve complex phase information if requested.
-
-    Args:
-        x (np.ndarray | torch.Tensor): Complex-valued input with shape (C,H,W)
-        backend (ModuleType): Either numpy or torch module
-        compute_absolute (bool): Whether to compute absolute value of input
-        keep_phase (bool): If True, preserves complex phase information 
-        min_value (np.ndarray | torch.Tensor): Min value per channel for normalization
-        max_value (np.ndarray | torch.Tensor): Max value per channel for normalization
-
-    Returns:
-        np.ndarray | torch.Tensor: Normalized data with same shape as input
-        
-    Example:
-        >>> x = np.random.complex128((3, 64, 64))
-        >>> mins = [1e-5, 1e-4, 1e-3] # Per-channel min values  
-        >>> maxs = [1.0, 2.0, 3.0] # Per-channel max values
-        >>> normalized = log_normalize_amplitude_channelwise(x, np, True, mins, maxs)
-        
-    Note:
-        - The min_value and max_value arrays must have the same length as the number of channels in the input
-        - If input is real-valued, the absolute value will not be computed.
-    """
-    assert backend.__name__ in ["numpy", "torch"], "Backend must be numpy or torch"
-    assert len(min_value) == x.shape[0], "min_value length must match number of channels"
-    assert len(max_value) == x.shape[0], "max_value length must match number of channels"
-    
     if keep_phase:
         phase = backend.angle(x)
         compute_absolute = True
     amplitude = backend.abs(x) if compute_absolute else x
-    
-    # Normalize all channels simultaneously
+
     amplitude = backend.clip(amplitude, min_value, max_value)
-    normalized = (backend.log10(amplitude / min_value)) / (np.log10(max_value / min_value))
-        
+    transformed_amplitude = (
+        backend.log10(amplitude / min_value)
+    ) / (np.log10(max_value / min_value))
+
     if keep_phase:
-        return normalized * backend.exp(1j * phase)
-    return normalized
+        return transformed_amplitude * backend.exp(1j * phase)
+    return transformed_amplitude
 
 
 def applyfft2_np(x: np.ndarray, axis: Tuple[int, ...]) -> np.ndarray:
