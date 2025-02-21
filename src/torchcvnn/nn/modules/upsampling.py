@@ -96,12 +96,15 @@ class UpsampleFFT(nn.Module):
     """Upsamples a tensor using Discrete Fourier Transform.
     This module performs upsampling by zero-padding in the frequency domain. It first applies
     DFT to transform the input to frequency domain, then zero-pads to the target size, and
-    finally applies inverse DFT to get back to spatial domain. 
+    finally applies inverse DFT to get back to spatial domain. Optionally, it scales the output 
+    amplitudes to maintain energy consistency between original and resized images.
     
     Upsampling works with both real-valued and complex-valued tensors. It returns real-valued tensors
     if the input is real-valued, and complex-valued tensors if the input is complex-valued.
     
     Args:
+        scale: bool, optional. Scale the output to maintain energy consistency with 
+            respect to input size. Default is True.
         size (tuple or int, optional): Target output size (H, W). If int, assumes square output.
             Either size or scale_factor must be specified, but not both.
         scale_factor (tuple or float, optional): Multiplier for spatial size.
@@ -126,28 +129,26 @@ class UpsampleFFT(nn.Module):
     """
     def __init__(
         self,
+        scale: bool = True,
         size: Optional[_size_any_t] = None,
         scale_factor: Optional[_ratio_any_t] = None
     ) -> None:
         super().__init__()
-        
+        self.scale = scale
         # Validate input parameters
         if not (bool(size) ^ bool(scale_factor)):  # XOR operation
             raise ValueError("Exactly one of size or scale_factor must be specified")
-        
         # Handle size parameter
         self.size = tuple([size] * 2) if isinstance(size, int) else size
-
         # Handle scale_factor parameter
         if scale_factor is not None:
             self.scale_factor = (float(scale_factor),) * 2 if isinstance(scale_factor, (int, float)) else scale_factor
-            
         # Validate tuple lengths
         for param, name in [(self.size, 'size'), (self.scale_factor, 'scale_factor')]:
             if param is not None and isinstance(param, tuple) and len(param) != 2:
                 raise ValueError(f"{name} must be an int or a tuple of length 2")
         
-    def upsampling(self, z: torch.Tensor) -> torch.Tensor:
+    def upsampling(self, z: torch.Tensor, ratio: float) -> torch.Tensor:
         # Apply Discrete Fourier Transform over the last two dimenstions, typically Height and Width
         z = F.applyfft2_torch(z)
         # Zero pad the input tensor to the desired size
@@ -156,6 +157,9 @@ class UpsampleFFT(nn.Module):
         z = F.center_crop(z, self.size[0], self.size[1])
         # Apply Inverse Discrete Fourier Transform over the last two dimensions
         z = F.applyifft2_torch(z)
+        # Scale the output tensor or not
+        if self.scale:
+            return z * ratio
         return z
         
     def forward(self, z: torch.Tensor) -> torch.Tensor:
@@ -165,7 +169,11 @@ class UpsampleFFT(nn.Module):
         # If the size is not specified, the output size will be computed as the input size multiplied by the scale factor
         if self.scale_factor is not None:
             self.size = (int(z.shape[-2] * self.scale_factor[0]), int(z.shape[-1] * self.scale_factor[1]))
+        # Compute data scaling ratio
+        original_size = z.shape[1] * z.shape[2]
+        target_size = self.height * self.width
+        ratio = target_size / original_size
         # Return complex-valued tensor if the input is complex-valued, otherwise return real-valued
         if z.is_complex():
-            return self.upsampling(z)
-        return self.upsampling(z).real
+            return self.upsampling(z, ratio)
+        return self.upsampling(z, ratio).real
