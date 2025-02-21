@@ -151,12 +151,12 @@ class LogAmplitude(BaseTransform):
     def __call_numpy__(self, x: np.ndarray) -> np.ndarray:
         if self.channelwise:
             return F.log_normalize_amplitude_channelwise(x, np, self.keep_phase, self.min_value, self.max_value)
-        return F.log_normalize_amplitude(x, np, self.keep_phase, self.min_value, self.max_value)
+        return F.log_normalize_amplitude(x, np, self.compute_absolute, self.keep_phase, self.min_value, self.max_value)
         
     def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
         if self.channelwise:
             return F.log_normalize_amplitude_channelwise(x, torch, self.keep_phase, self.min_value, self.max_value)
-        return F.log_normalize_amplitude(x, torch, self.keep_phase, self.min_value, self.max_value)
+        return F.log_normalize_amplitude(x, torch, self.compute_absolute, self.keep_phase, self.min_value, self.max_value)
 
 
 class Amplitude(BaseTransform):
@@ -441,7 +441,7 @@ class FFTResize(BaseTransform):
         self, 
         size: Tuple[int, ...], 
         axis: Tuple[int, ...] = (-2, -1), 
-        scale: bool = False, 
+        scale: bool = True, 
         dtype: Optional[str] = "complex64"
     ) -> None:
         if dtype is None or "complex" not in str(dtype):
