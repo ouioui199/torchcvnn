@@ -120,13 +120,16 @@ class LogAmplitude(BaseTransform):
         >>> transform = LogAmplitude(min_value=0.01, max_value=100)
         >>> output = transform(input_data)
 
+        >>> transform = LogAmplitude(min_value=[0.02, 0.03], max_value=[40., 39., 42], channelwise=True)
+        >>> output = transform(input_data)
+
     Note:
         If channelwise=True, min_value and max_value must be sequences matching number of channels
     """
     def __init__(
         self, 
         min_value: float | Sequence[float] = 0.02, 
-        max_value: float | Sequence[float] = 40, 
+        max_value: float | Sequence[float] = 40., 
         keep_phase: bool = True,
         compute_absolute: bool = True,
         channelwise: bool = False
@@ -143,20 +146,24 @@ class LogAmplitude(BaseTransform):
     ) -> float | np.ndarray:
         """Validate and convert input values."""
         if self.channelwise:
-            if not isinstance(value, (float, Sequence)):
-                raise TypeError(f"Expected floating number or sequence, got {type(value)}")
-            return np.array(value)
+            if not isinstance(value, Sequence):
+                raise TypeError(f"Expected sequence, got {type(value)}")
+            return np.array(value).reshape(-1, 1, 1)
         return value
 
     def __call_numpy__(self, x: np.ndarray) -> np.ndarray:
-        if self.channelwise:
-            return F.log_normalize_amplitude_channelwise(x, np, self.keep_phase, self.min_value, self.max_value)
         return F.log_normalize_amplitude(x, np, self.compute_absolute, self.keep_phase, self.min_value, self.max_value)
         
     def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
+        min_value = torch.as_tensor(self.min_value)
+        max_value = torch.as_tensor(self.max_value)
+        return F.log_normalize_amplitude(x, torch, self.compute_absolute, self.keep_phase, min_value, max_value)
+    
+    def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
         if self.channelwise:
-            return F.log_normalize_amplitude_channelwise(x, torch, self.keep_phase, self.min_value, self.max_value)
-        return F.log_normalize_amplitude(x, torch, self.compute_absolute, self.keep_phase, self.min_value, self.max_value)
+            assert len(self.min_value) == x.shape[0], "min_value length must match number of channels"
+            assert len(self.max_value) == x.shape[0], "max_value length must match number of channels"
+        return super().__call__(x)
 
 
 class Amplitude(BaseTransform):
