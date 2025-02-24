@@ -170,8 +170,8 @@ class UpsampleFFT(nn.Module):
         if self.scale_factor is not None:
             self.size = (int(z.shape[-2] * self.scale_factor[0]), int(z.shape[-1] * self.scale_factor[1]))
         # Compute data scaling ratio
-        original_size = z.shape[1] * z.shape[2]
-        target_size = self.height * self.width
+        original_size = z.shape[-2] * z.shape[-1]
+        target_size = self.size[0] * self.size[1]
         ratio = target_size / original_size
         # Return complex-valued tensor if the input is complex-valued, otherwise return real-valued
         if z.is_complex():
