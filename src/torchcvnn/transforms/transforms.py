@@ -229,6 +229,24 @@ class ToReal:
     """
     def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
         return x.real
+    
+
+class ToImaginary:
+    """Extracts the imaginary part of a complex-valued input tensor.
+
+    The `ToImaginary` transform takes either a numpy array or a PyTorch tensor containing complex numbers 
+    and returns only their imaginary parts. If the input is already real-valued, it remains unchanged.
+
+    Returns:
+        np.ndarray | torch.Tensor: A tensor with the same shape as the input but containing only 
+                                  the imaginary components of each element.
+    
+    Example:
+        >>> to_imaginary = ToImaginary()
+        >>> output = to_imaginary(complex_tensor)
+    """
+    def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
+        return x.imag
 
 
 class RandomPhase(BaseTransform):
