@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="torchcvnn.nn.CTanh" href="torchcvnn.nn.CTanh.html" /><link rel="prev" title="torchcvnn.nn.CPReLU" href="torchcvnn.nn.CPReLU.html" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="torchcvnn.transforms.LogAmplitude" href="torchcvnn.transforms.LogAmplitude.html" /><link rel="prev" title="torchcvnn.transforms.RealImaginary" href="torchcvnn.transforms.RealImaginary.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>torchcvnn.nn.CSigmoid - torchcvnn 0.9.4 documentation</title>
+        <title>torchcvnn.transforms.PolSARtoTensor - torchcvnn 0.9.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -206,11 +206,11 @@
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../datasets.html">torchcvnn.datasets</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../transforms.html">torchcvnn.transforms</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of torchcvnn.transforms</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../transforms.html">torchcvnn.transforms</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of torchcvnn.transforms</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.Unsqueeze.html">torchcvnn.transforms.Unsqueeze</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.ToTensor.html">torchcvnn.transforms.ToTensor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.RealImaginary.html">torchcvnn.transforms.RealImaginary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.PolSARtoTensor.html">torchcvnn.transforms.PolSARtoTensor</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">torchcvnn.transforms.PolSARtoTensor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.LogAmplitude.html">torchcvnn.transforms.LogAmplitude</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.Amplitude.html">torchcvnn.transforms.Amplitude</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.RandomPhase.html">torchcvnn.transforms.RandomPhase</a></li>
@@ -218,7 +218,7 @@
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.transforms.FFTResize.html">torchcvnn.transforms.FFTResize</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../nn.html">torchcvnn.nn</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of torchcvnn.nn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../nn.html">torchcvnn.nn</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of torchcvnn.nn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.ConvTranspose2d.html">torchcvnn.nn.ConvTranspose2d</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.MaxPool2d.html">torchcvnn.nn.MaxPool2d</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.AvgPool2d.html">torchcvnn.nn.AvgPool2d</a></li>
@@ -228,7 +228,7 @@
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.CGELU.html">torchcvnn.nn.CGELU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.CReLU.html">torchcvnn.nn.CReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.CPReLU.html">torchcvnn.nn.CPReLU</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">torchcvnn.nn.CSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.CSigmoid.html">torchcvnn.nn.CSigmoid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.CTanh.html">torchcvnn.nn.CTanh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.Cardioid.html">torchcvnn.nn.Cardioid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torchcvnn.nn.Mod.html">torchcvnn.nn.Mod</a></li>
@@ -277,12 +277,12 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="https://github.com/torchcvnn/torchcvnn/blob/main/docs/source/modules/_autosummary/torchcvnn.nn.CSigmoid.rst?plain=true" title="View this page">
+  <a class="muted-link" href="https://github.com/torchcvnn/torchcvnn/blob/main/docs/source/modules/_autosummary/torchcvnn.transforms.PolSARtoTensor.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
 </div><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/torchcvnn/torchcvnn/edit/main/docs/source/modules/_autosummary/torchcvnn.nn.CSigmoid.rst" title="Edit this page">
+  <a class="muted-link" href="https://github.com/torchcvnn/torchcvnn/edit/main/docs/source/modules/_autosummary/torchcvnn.transforms.PolSARtoTensor.rst" title="Edit this page">
     <svg><use href="#svg-pencil"></use></svg>
     <span class="visually-hidden">Edit this page</span>
   </a>
@@ -301,195 +301,22 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="torchcvnn-nn-csigmoid">
-<h1>torchcvnn.nn.CSigmoid<a class="headerlink" href="#torchcvnn-nn-csigmoid" title="Link to this heading">¶</a></h1>
+          <section id="torchcvnn-transforms-polsartotensor">
+<h1>torchcvnn.transforms.PolSARtoTensor<a class="headerlink" href="#torchcvnn-transforms-polsartotensor" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="torchcvnn.nn.CSigmoid">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">torchcvnn.nn.</span></span><span class="sig-name descname"><span class="pre">CSigmoid</span></span><a class="reference internal" href="../../_modules/torchcvnn/nn/modules/activation.html#CSigmoid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchcvnn.nn.CSigmoid" title="Link to this definition">¶</a></dt>
-<dd><p>Applies a Sigmoid independently on both the real and imaginary parts</p>
-<p>as used in Nitta Tohru. An extension of the back-propagation algorithm to complex numbers. Neural Networks, 10(9):1391–1415, November 1997.</p>
-<p><span class="math notranslate nohighlight">\(CSigmoid(z) = Sigmoid(\Re[z]) + Sigmoid(\Im[z])j\)</span></p>
-<p>where the real valued sigmoid is applied in the right hand side terms.</p>
+<dt class="sig sig-object py" id="torchcvnn.transforms.PolSARtoTensor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">torchcvnn.transforms.</span></span><span class="sig-name descname"><span class="pre">PolSARtoTensor</span></span><a class="reference internal" href="../../_modules/torchcvnn/transforms/transforms.html#PolSARtoTensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchcvnn.transforms.PolSARtoTensor" title="Link to this definition">¶</a></dt>
+<dd><p>Transform a PolSAR image into a 3D torch tensor.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="torchcvnn.nn.CSigmoid.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/torchcvnn/nn/modules/activation.html#CSigmoid.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchcvnn.nn.CSigmoid.__init__" title="Link to this definition">¶</a></dt>
-<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
-</dd></dl>
+<dt class="sig sig-object py" id="torchcvnn.transforms.PolSARtoTensor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#torchcvnn.transforms.PolSARtoTensor.__init__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <p class="rubric">Methods</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#torchcvnn.nn.CSigmoid.__init__" title="torchcvnn.nn.CSigmoid.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
-<td><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_module</span></code>(name, module)</p></td>
-<td><p>Add a child module to the current module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(fn)</p></td>
-<td><p>Apply <code class="docutils literal notranslate"><span class="pre">fn</span></code> recursively to every submodule (as returned by <code class="docutils literal notranslate"><span class="pre">.children()</span></code>) as well as self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bfloat16</span></code>()</p></td>
-<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">bfloat16</span></code> datatype.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffers</span></code>([recurse])</p></td>
-<td><p>Return an iterator over module buffers.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code>()</p></td>
-<td><p>Return an iterator over immediate children modules.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code>(*args, **kwargs)</p></td>
-<td><p>Compile this Module's forward using <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.compile.html#torch.compile" title="(in PyTorch v2.6)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.compile()</span></code></a>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code>()</p></td>
-<td><p>Move all model parameters and buffers to the CPU.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code>([device])</p></td>
-<td><p>Move all model parameters and buffers to the GPU.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code>()</p></td>
-<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval</span></code>()</p></td>
-<td><p>Set the module in evaluation mode.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_repr</span></code>()</p></td>
-<td><p>Return the extra representation of the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code>()</p></td>
-<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">float</span></code> datatype.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code>(z)</p></td>
-<td><p>Performs the forward pass</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_buffer</span></code>(target)</p></td>
-<td><p>Return the buffer given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_extra_state</span></code>()</p></td>
-<td><p>Return any extra state to include in the module's state_dict.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_parameter</span></code>(target)</p></td>
-<td><p>Return the parameter given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_submodule</span></code>(target)</p></td>
-<td><p>Return the submodule given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">half</span></code>()</p></td>
-<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">half</span></code> datatype.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ipu</span></code>([device])</p></td>
-<td><p>Move all model parameters and buffers to the IPU.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_state_dict</span></code>(state_dict[, strict, assign])</p></td>
-<td><p>Copy parameters and buffers from <code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code> into this module and its descendants.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">modules</span></code>()</p></td>
-<td><p>Return an iterator over all modules in the network.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mtia</span></code>([device])</p></td>
-<td><p>Move all model parameters and buffers to the MTIA.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_buffers</span></code>([prefix, recurse, ...])</p></td>
-<td><p>Return an iterator over module buffers, yielding both the name of the buffer as well as the buffer itself.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_children</span></code>()</p></td>
-<td><p>Return an iterator over immediate children modules, yielding both the name of the module as well as the module itself.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_modules</span></code>([memo, prefix, remove_duplicate])</p></td>
-<td><p>Return an iterator over all modules in the network, yielding both the name of the module as well as the module itself.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_parameters</span></code>([prefix, recurse, ...])</p></td>
-<td><p>Return an iterator over module parameters, yielding both the name of the parameter as well as the parameter itself.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameters</span></code>([recurse])</p></td>
-<td><p>Return an iterator over module parameters.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_backward_hook</span></code>(hook)</p></td>
-<td><p>Register a backward hook on the module.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_buffer</span></code>(name, tensor[, persistent])</p></td>
-<td><p>Add a buffer to the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_forward_hook</span></code>(hook, *[, prepend, ...])</p></td>
-<td><p>Register a forward hook on the module.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_forward_pre_hook</span></code>(hook, *[, ...])</p></td>
-<td><p>Register a forward pre-hook on the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_full_backward_hook</span></code>(hook[, prepend])</p></td>
-<td><p>Register a backward hook on the module.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_full_backward_pre_hook</span></code>(hook[, prepend])</p></td>
-<td><p>Register a backward pre-hook on the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_load_state_dict_post_hook</span></code>(hook)</p></td>
-<td><p>Register a post-hook to be run after module's <code class="xref py py-meth docutils literal notranslate"><span class="pre">load_state_dict()</span></code> is called.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_load_state_dict_pre_hook</span></code>(hook)</p></td>
-<td><p>Register a pre-hook to be run before module's <code class="xref py py-meth docutils literal notranslate"><span class="pre">load_state_dict()</span></code> is called.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_module</span></code>(name, module)</p></td>
-<td><p>Alias for <code class="xref py py-func docutils literal notranslate"><span class="pre">add_module()</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_parameter</span></code>(name, param)</p></td>
-<td><p>Add a parameter to the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_state_dict_post_hook</span></code>(hook)</p></td>
-<td><p>Register a post-hook for the <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.state_dict" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code></a> method.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_state_dict_pre_hook</span></code>(hook)</p></td>
-<td><p>Register a pre-hook for the <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.state_dict" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code></a> method.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">requires_grad_</span></code>([requires_grad])</p></td>
-<td><p>Change if autograd should record operations on parameters in this module.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_extra_state</span></code>(state)</p></td>
-<td><p>Set extra state contained in the loaded <cite>state_dict</cite>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_submodule</span></code>(target, module)</p></td>
-<td><p>Set the submodule given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">share_memory</span></code>()</p></td>
-<td><p>See <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.share_memory_.html#torch.Tensor.share_memory_" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.share_memory_()</span></code></a>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_dict</span></code>(*args[, destination, prefix, ...])</p></td>
-<td><p>Return a dictionary containing references to the whole state of the module.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code>(*args, **kwargs)</p></td>
-<td><p>Move and/or cast the parameters and buffers.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_empty</span></code>(*, device[, recurse])</p></td>
-<td><p>Move the parameters and buffers to the specified device without copying storage.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code>([mode])</p></td>
-<td><p>Set the module in training mode.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code>(dst_type)</p></td>
-<td><p>Casts all parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dst_type</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">xpu</span></code>([device])</p></td>
-<td><p>Move all model parameters and buffers to the XPU.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_grad</span></code>([set_to_none])</p></td>
-<td><p>Reset gradients of all model parameters.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Attributes</p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">T_destination</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">call_super_init</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump_patches</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#torchcvnn.transforms.PolSARtoTensor.__init__" title="torchcvnn.transforms.PolSARtoTensor.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -504,23 +331,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="torchcvnn.nn.CTanh.html">
+          <a class="next-page" href="torchcvnn.transforms.LogAmplitude.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">torchcvnn.nn.CTanh</div>
+                <div class="title">torchcvnn.transforms.LogAmplitude</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="torchcvnn.nn.CPReLU.html">
+          <a class="prev-page" href="torchcvnn.transforms.RealImaginary.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">torchcvnn.nn.CPReLU</div>
+                <div class="title">torchcvnn.transforms.RealImaginary</div>
                 
               </div>
             </a>
@@ -561,9 +388,9 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">torchcvnn.nn.CSigmoid</a><ul>
-<li><a class="reference internal" href="#torchcvnn.nn.CSigmoid"><code class="docutils literal notranslate"><span class="pre">CSigmoid</span></code></a><ul>
-<li><a class="reference internal" href="#torchcvnn.nn.CSigmoid.__init__"><code class="docutils literal notranslate"><span class="pre">CSigmoid.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#">torchcvnn.transforms.PolSARtoTensor</a><ul>
+<li><a class="reference internal" href="#torchcvnn.transforms.PolSARtoTensor"><code class="docutils literal notranslate"><span class="pre">PolSARtoTensor</span></code></a><ul>
+<li><a class="reference internal" href="#torchcvnn.transforms.PolSARtoTensor.__init__"><code class="docutils literal notranslate"><span class="pre">PolSARtoTensor.__init__()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -583,6 +410,5 @@
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>
