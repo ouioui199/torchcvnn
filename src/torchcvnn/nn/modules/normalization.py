@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2024 Jeremy Fix
+# Copyright (c) 2024-2025 Jeremy Fix, Huy Nguyen
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ import torch.nn.init as init
 
 # Local imports
 import torchcvnn.nn.modules.batchnorm as bn
+from torchcvnn.nn.modules.activation import IndependentRealImag
 
 _shape_t = Union[int, List[int], Size]
 
@@ -233,3 +234,33 @@ class RMSNorm(nn.Module):
         outz = outz.view(z.shape)
 
         return outz
+
+
+class DynamicTanh(nn.Module):
+    
+    def __init__(self, normalized_shape: int, channels_last: bool, alpha_init_value: float = 0.5) -> None:
+        super().__init__()
+        self.normalized_shape = normalized_shape
+        self.alpha_init_value = alpha_init_value
+        self.channels_last = channels_last
+
+        self.alpha = nn.Parameter(torch.ones(1) * alpha_init_value)
+        self.weight = nn.Parameter(torch.ones(normalized_shape))
+        self.bias = nn.Parameter(torch.zeros(normalized_shape))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = torch.tanh(self.alpha * x)
+        if self.channels_last:
+            x = x * self.weight + self.bias
+        else:
+            x = x * self.weight[:, None, None] + self.bias[:, None, None]
+        return x
+
+    def extra_repr(self) -> str:
+        return f"normalized_shape={self.normalized_shape}, alpha_init_value={self.alpha_init_value}, channels_last={self.channels_last}"
+    
+
+class CDynamicTanh(IndependentRealImag):
+    
+    def __init__(self) -> None:
+        super().__init__(DynamicTanh)
