@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2024 Jeremy Fix
+# Copyright (c) 2024-2025 Jeremy Fix, Huy Nguyen
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,10 @@ import math
 import torch
 from torch import Tensor
 import torch.nn.functional as F
+from timm.layers import LayerNorm2d
+
+# Local imports
+from torchcvnn.nn.modules.normalization import LayerNorm, CDynamicTanh
 
 
 def dropout(
@@ -421,3 +425,13 @@ def multi_head_attention_forward(
         attn_output = attn_output.squeeze(1)
         attn_output_weights = attn_output_weights.squeeze(0)
     return attn_output, attn_output_weights
+
+
+def convert_ln_to_dyt(module):
+    module_output = module
+    if isinstance(module, LayerNorm):
+        module_output = CDynamicTanh(module.normalized_shape, not isinstance(module, LayerNorm2d))
+    for name, child in module.named_children():
+        module_output.add_module(name, convert_ln_to_dyt(child))
+    del module
+    return module_output
