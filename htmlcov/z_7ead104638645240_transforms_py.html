@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for /home/runner/work/torchcvnn/torchcvnn/src/torchcvnn/transforms/transforms.py: 58%</title>
+    <title>Coverage for /home/runner/work/torchcvnn/torchcvnn/src/torchcvnn/transforms/transforms.py: 57%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
     <link rel="stylesheet" href="style_cb_81f8c14c.css" type="text/css">
     <script src="coverage_html_cb_6fb7b396.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>/home/runner/work/torchcvnn/torchcvnn/src/torchcvnn/transforms/transforms.py</b>:
-            <span class="pc_cov">58%</span>
+            <span class="pc_cov">57%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -54,9 +54,9 @@
             </div>
         </aside>
         <h2>
-            <span class="text">205 statements &nbsp;</span>
+            <span class="text">207 statements &nbsp;</span>
             <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">119<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">86<span class="text"> missing</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">88<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="index.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.9.1">coverage.py v7.9.1</a>,
-            created at 2025-06-18 07:05 +0000
+            created at 2025-06-19 07:16 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -776,11 +776,13 @@
     <p class="mis show_mis"><span class="n"><a id="t694" href="#t694">694</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">convert_dtype</span> <span class="op">=</span> <span class="nam">dtype</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t695" href="#t695">695</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t696" href="#t696">696</a></span><span class="t">    <span class="key">def</span> <span class="nam">__call_numpy__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">x</span><span class="op">:</span> <span class="nam">np</span><span class="op">.</span><span class="nam">ndarray</span><span class="op">)</span> <span class="op">-></span> <span class="nam">np</span><span class="op">.</span><span class="nam">ndarray</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t697" href="#t697">697</a></span><span class="t">        <span class="nam">x</span> <span class="op">=</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">as_tensor</span><span class="op">(</span><span class="nam">x</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t698" href="#t698">698</a></span><span class="t">        <span class="key">return</span> <span class="nam">x</span><span class="op">.</span><span class="nam">to</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">torch_dtype</span><span class="op">)</span> <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">convert_dtype</span> <span class="key">else</span> <span class="nam">x</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t699" href="#t699">699</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t700" href="#t700">700</a></span><span class="t">    <span class="key">def</span> <span class="nam">__call_torch__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">x</span><span class="op">:</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">Tensor</span><span class="op">)</span> <span class="op">-></span> <span class="nam">torch</span><span class="op">.</span><span class="nam">Tensor</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t701" href="#t701">701</a></span><span class="t">        <span class="key">return</span> <span class="nam">x</span><span class="op">.</span><span class="nam">to</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">torch_dtype</span><span class="op">)</span> <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">convert_dtype</span> <span class="key">else</span> <span class="nam">x</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t697" href="#t697">697</a></span><span class="t">        <span class="nam">x</span> <span class="op">=</span> <span class="nam">x</span><span class="op">[</span><span class="nam">np</span><span class="op">.</span><span class="nam">newaxis</span><span class="op">,</span> <span class="op">:</span><span class="op">,</span> <span class="op">:</span><span class="op">]</span> <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">x</span><span class="op">.</span><span class="nam">shape</span><span class="op">)</span> <span class="op">==</span> <span class="num">2</span> <span class="key">else</span> <span class="nam">x</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t698" href="#t698">698</a></span><span class="t">        <span class="nam">x</span> <span class="op">=</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">from_numpy</span><span class="op">(</span><span class="nam">x</span><span class="op">.</span><span class="nam">copy</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="key">if</span> <span class="nam">isinstance</span><span class="op">(</span><span class="nam">x</span><span class="op">,</span> <span class="nam">np</span><span class="op">.</span><span class="nam">ndarray</span><span class="op">)</span> <span class="key">else</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">from_numpy</span><span class="op">(</span><span class="nam">x</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t699" href="#t699">699</a></span><span class="t">        <span class="key">return</span> <span class="nam">x</span><span class="op">.</span><span class="nam">to</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">torch_dtype</span><span class="op">)</span> <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">convert_dtype</span> <span class="key">else</span> <span class="nam">x</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t700" href="#t700">700</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t701" href="#t701">701</a></span><span class="t">    <span class="key">def</span> <span class="nam">__call_torch__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">x</span><span class="op">:</span> <span class="nam">torch</span><span class="op">.</span><span class="nam">Tensor</span><span class="op">)</span> <span class="op">-></span> <span class="nam">torch</span><span class="op">.</span><span class="nam">Tensor</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t702" href="#t702">702</a></span><span class="t">        <span class="nam">x</span> <span class="op">=</span> <span class="nam">x</span><span class="op">.</span><span class="nam">unsqueeze</span><span class="op">(</span><span class="num">0</span><span class="op">)</span> <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">x</span><span class="op">.</span><span class="nam">shape</span><span class="op">)</span> <span class="op">==</span> <span class="num">2</span> <span class="key">else</span> <span class="nam">x</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t703" href="#t703">703</a></span><span class="t">        <span class="key">return</span> <span class="nam">x</span><span class="op">.</span><span class="nam">to</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">torch_dtype</span><span class="op">)</span> <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">convert_dtype</span> <span class="key">else</span> <span class="nam">x</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -790,7 +792,7 @@
             <a class="nav" href="index.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.9.1">coverage.py v7.9.1</a>,
-            created at 2025-06-18 07:05 +0000
+            created at 2025-06-19 07:16 +0000
         </p>
     </div>
 </footer>
