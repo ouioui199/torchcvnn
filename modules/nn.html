@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="torchcvnn.nn.ConvTranspose2d" href="_autosummary/torchcvnn.nn.ConvTranspose2d.html"><link rel="prev" title="torchcvnn.transforms.IFFT2" href="_autosummary/torchcvnn.transforms.IFFT2.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
-        <title>torchcvnn.nn - torchcvnn 0.9.9 documentation</title>
+        <title>torchcvnn.nn - torchcvnn 0.10.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -162,7 +162,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">torchcvnn 0.9.9 documentation</div></a>
+      <a href="../index.html"><div class="brand">torchcvnn 0.10.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -183,7 +183,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
-  <span class="sidebar-brand-text">torchcvnn 0.9.9 documentation</span>
+  <span class="sidebar-brand-text">torchcvnn 0.10.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -209,6 +209,7 @@
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.transforms.LogAmplitude.html">torchcvnn.transforms.LogAmplitude</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.transforms.Amplitude.html">torchcvnn.transforms.Amplitude</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.transforms.RandomPhase.html">torchcvnn.transforms.RandomPhase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.transforms.HWC2CHW.html">torchcvnn.transforms.HWC2CHW</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.transforms.SpatialResize.html">torchcvnn.transforms.SpatialResize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.transforms.FFTResize.html">torchcvnn.transforms.FFTResize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.transforms.CenterCrop.html">torchcvnn.transforms.CenterCrop</a></li>
@@ -241,6 +242,7 @@
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.nn.BatchNorm1d.html">torchcvnn.nn.BatchNorm1d</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.nn.LayerNorm.html">torchcvnn.nn.LayerNorm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.nn.RMSNorm.html">torchcvnn.nn.RMSNorm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.nn.GroupNorm.html">torchcvnn.nn.GroupNorm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.nn.Transformer.html">torchcvnn.nn.Transformer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.nn.TransformerEncoderLayer.html">torchcvnn.nn.TransformerEncoderLayer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/torchcvnn.nn.TransformerDecoderLayer.html">torchcvnn.nn.TransformerDecoderLayer</a></li>
@@ -409,7 +411,7 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/torchcvnn.nn.MultiheadAttention.html#torchcvnn.nn.MultiheadAttention" title="torchcvnn.nn.MultiheadAttention"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiheadAttention</span></code></a>(embed_dim, num_heads[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/torchcvnn.nn.MultiheadAttention.html#torchcvnn.nn.MultiheadAttention" title="torchcvnn.nn.MultiheadAttention"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiheadAttention</span></code></a>(embed_dim, num_heads, ...)</p></td>
 <td><p>This class is adapted from torch.nn.MultiheadAttention to support complex valued tensors.</p></td>
 </tr>
 </tbody>
@@ -433,6 +435,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="_autosummary/torchcvnn.nn.RMSNorm.html#torchcvnn.nn.RMSNorm" title="torchcvnn.nn.RMSNorm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RMSNorm</span></code></a>(normalized_shape[, eps, ...])</p></td>
 <td><p>Implementation of the torch.nn.RMSNorm for complex numbers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/torchcvnn.nn.GroupNorm.html#torchcvnn.nn.GroupNorm" title="torchcvnn.nn.GroupNorm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupNorm</span></code></a>(num_groups, num_channels[, eps, ...])</p></td>
+<td><p>Implementation of Group Normalization for complex numbers.</p></td>
 </tr>
 </tbody>
 </table>
@@ -461,7 +466,7 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/torchcvnn.nn.ViTLayer.html#torchcvnn.nn.ViTLayer" title="torchcvnn.nn.ViTLayer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ViTLayer</span></code></a>(num_heads, hidden_dim, mlp_dim, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/torchcvnn.nn.ViTLayer.html#torchcvnn.nn.ViTLayer" title="torchcvnn.nn.ViTLayer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ViTLayer</span></code></a>(num_heads, embed_dim, hidden_dim, ...)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="_autosummary/torchcvnn.nn.ViT.html#torchcvnn.nn.ViT" title="torchcvnn.nn.ViT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ViT</span></code></a>(patch_embedder, num_layers, num_heads, ...)</p></td>
@@ -575,7 +580,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=be50ab7b"></script>
+</div><script src="../_static/documentation_options.js?v=82662543"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
