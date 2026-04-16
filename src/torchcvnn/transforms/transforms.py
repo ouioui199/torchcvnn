@@ -22,8 +22,8 @@
 
 # Standard imports
 from abc import ABC, abstractmethod
-from typing import Tuple, Union, Optional, Dict
-from types import ModuleType
+from typing import Tuple, Union, Optional, Dict, Sequence
+from types import NoneType, ModuleType
 
 # External imports
 import torch
@@ -96,50 +96,80 @@ class BaseTransform(ABC):
     def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
         """Apply transform to torch tensor."""
         raise NotImplementedError
-
+    
 
 class LogAmplitude(BaseTransform):
-    """This transform applies a logarithmic scaling to the amplitude/magnitude of complex values
-    while optionally preserving the phase information. The amplitude is first clipped to
-    [min_value, max_value] range, then log10-transformed and normalized to [0,1] range.
+    """Applies logarithmic scaling to complex-valued data.
 
-    The transformation follows these steps:
-    1. Extract amplitude and phase from complex input
-    2. Clip amplitude between min_value and max_value
-    3. Apply log10 transform and normalize to [0,1]
-    4. Optionally recombine with original phase
+    This transform applies logarithmic scaling to the amplitude/magnitude of complex values
+    with optional phase preservation. The amplitude is clipped to [min_value, max_value],
+    then log10-transformed and normalized to [0,1].
 
     Args:
-        min_value (int | float, optional): Minimum amplitude value for clipping.
-            Values below this will be clipped up. Defaults to 0.02.
-        max_value (int | float, optional): Maximum amplitude value for clipping.
-            Values above this will be clipped down. Defaults to 40.
-        keep_phase (bool, optional): Whether to preserve phase information.
-            If True, returns complex output with transformed amplitude and original phase.
-            If False, returns just the transformed amplitude. Defaults to True.
-    Returns:
-        np.ndarray | torch.Tensor: Transformed tensor with same shape as input.
-            If keep_phase=True: Complex tensor with log-scaled amplitude and original phase
-            If keep_phase=False: Real tensor with just the log-scaled amplitude
+        min_value (float | Sequence[float]): Minimum clip value for amplitude. If channelwise,
+            can be sequence of values per channel. Default: 0.02
+        max_value (float | Sequence[float]): Maximum clip value for amplitude. If channelwise,
+            can be sequence of values per channel. Default: 40 
+        keep_phase (bool): Whether to preserve phase information. If True, returns complex output 
+            with transformed amplitude and original phase. If False, returns just transformed amplitude.
+            Default: True
+        compute_absolute (bool): Whether to compute absolute value before transform. Default: True
+        channelwise (bool): Whether to apply transform per channel with different min/max values.
+            Default: False
+
+    Returns: 
+        np.ndarray | torch.Tensor: Transformed data with same shape as input.
+        If keep_phase=True: Complex with log-scaled amplitude and original phase
+        If keep_phase=False: Real with just log-scaled amplitude
+
     Example:
         >>> transform = LogAmplitude(min_value=0.01, max_value=100)
-        >>> output = transform(input_tensor)  # Transforms amplitudes to log scale [0,1]
-    Note:
-        The transform works with both NumPy arrays and PyTorch tensors through
-        separate internal implementations (__call_numpy__ and __call_torch__).
-    """
+        >>> output = transform(input_data)
 
+        >>> transform = LogAmplitude(min_value=[0.02, 0.03], max_value=[40., 39., 42], channelwise=True)
+        >>> output = transform(input_data)
+
+    Note:
+        If channelwise=True, min_value and max_value must be sequences matching number of channels
+    """
     def __init__(
-        self, min_value: float = 0.02, max_value: float = 40, keep_phase: bool = True
+        self, 
+        min_value: float | Sequence[float] = 0.02, 
+        max_value: float | Sequence[float] = 40., 
+        keep_phase: bool = True,
+        compute_absolute: bool = True,
+        channelwise: bool = False
     ) -> None:
-        self.min_value = min_value
-        self.max_value = max_value
+        self.channelwise = channelwise
         self.keep_phase = keep_phase
+        self.compute_absolute = compute_absolute
+        self.min_value = self._validate_value(min_value)
+        self.max_value = self._validate_value(max_value)
+    
+    def _validate_value(
+        self, 
+        value: float | Sequence[float]
+    ) -> float | np.ndarray:
+        """Validate and convert input values."""
+        if self.channelwise:
+            if not isinstance(value, Sequence):
+                raise TypeError(f"Expected sequence, got {type(value)}")
+            return np.array(value).reshape(-1, 1, 1)
+        return value
 
     def __call_numpy__(self, x: np.ndarray) -> np.ndarray:
-        return F.log_normalize_amplitude(
-            x, np, self.keep_phase, self.min_value, self.max_value
-        )
+        return F.log_normalize_amplitude(x, np, self.compute_absolute, self.keep_phase, self.min_value, self.max_value)
+        
+    def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
+        min_value = torch.as_tensor(self.min_value)
+        max_value = torch.as_tensor(self.max_value)
+        return F.log_normalize_amplitude(x, torch, self.compute_absolute, self.keep_phase, min_value, max_value)
+    
+    def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
+        if self.channelwise:
+            assert len(self.min_value) == x.shape[0], "min_value length must match number of channels"
+            assert len(self.max_value) == x.shape[0], "max_value length must match number of channels"
+        return super().__call__(x)
 
     def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
         return F.log_normalize_amplitude(
@@ -267,6 +297,42 @@ class RealImaginary(BaseTransform):
         return x
 
 
+class ToReal:
+    """Extracts the real part of a complex-valued input tensor.
+
+    The `ToReal` transform takes either a numpy array or a PyTorch tensor containing complex numbers 
+    and returns only their real parts. If the input is already real-valued, it remains unchanged.
+
+    Returns:
+        np.ndarray | torch.Tensor: A tensor with the same shape as the input but containing only 
+                                  the real components of each element.
+    
+    Example:
+        >>> to_real = ToReal()
+        >>> output = to_real(complex_tensor)
+    """
+    def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
+        return x.real
+    
+
+class ToImaginary:
+    """Extracts the imaginary part of a complex-valued input tensor.
+
+    The `ToImaginary` transform takes either a numpy array or a PyTorch tensor containing complex numbers 
+    and returns only their imaginary parts. If the input is already real-valued, it remains unchanged.
+
+    Returns:
+        np.ndarray | torch.Tensor: A tensor with the same shape as the input but containing only 
+                                  the imaginary components of each element.
+    
+    Example:
+        >>> to_imaginary = ToImaginary()
+        >>> output = to_imaginary(complex_tensor)
+    """
+    def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
+        return x.imag
+
+
 class RandomPhase(BaseTransform):
     """Randomly phase-shifts complex-valued input data.
     This transform applies a random phase shift to complex-valued input tensors/arrays by
@@ -310,44 +376,6 @@ class RandomPhase(BaseTransform):
         if self.centering:
             phase = phase - np.pi
         return (x * np.exp(1j * phase)).astype(self.np_dtype)
-
-
-class ToReal:
-    """Extracts the real part of a complex-valued input tensor.
-
-    The `ToReal` transform takes either a numpy array or a PyTorch tensor containing complex numbers
-    and returns only their real parts. If the input is already real-valued, it remains unchanged.
-
-    Returns:
-        np.ndarray | torch.Tensor: A tensor with the same shape as the input but containing only
-                                  the real components of each element.
-
-    Example:
-        >>> to_real = ToReal()
-        >>> output = to_real(complex_tensor)
-    """
-
-    def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
-        return x.real
-
-
-class ToImaginary:
-    """Extracts the imaginary part of a complex-valued input tensor.
-
-    The `ToImaginary` transform takes either a numpy array or a PyTorch tensor containing complex numbers
-    and returns only their imaginary parts. If the input is already real-valued, it remains unchanged.
-
-    Returns:
-        np.ndarray | torch.Tensor: A tensor with the same shape as the input but containing only
-                                  the imaginary components of each element.
-
-    Example:
-        >>> to_imaginary = ToImaginary()
-        >>> output = to_imaginary(complex_tensor)
-    """
-
-    def __call__(self, x: np.ndarray | torch.Tensor) -> np.ndarray | torch.Tensor:
-        return x.imag
 
 
 class FFT2(BaseTransform):
@@ -505,6 +533,10 @@ class FFTResize(BaseTransform):
         scale: bool, optional
             If True, scales the output amplitudes to maintain energy consistency with 
             respect to input size. Default is True.
+        dtype: torch.dtype or numpy.dtype, optional
+            Output data type. If None, maintains the input data type.
+            For PyTorch tensors: torch.complex64 or torch.complex128
+            For NumPy arrays: numpy.complex64 or numpy.complex128
 
     Returns:
         numpy.ndarray or torch.Tensor
@@ -528,7 +560,8 @@ class FFTResize(BaseTransform):
         self, 
         size: Tuple[int, ...], 
         axis: Tuple[int, ...] = (-2, -1), 
-        scale: bool = True
+        scale: bool = True, 
+        dtype: Optional[str] = "complex64"
     ) -> None:
         assert isinstance(size, Tuple), "size must be a tuple"
         assert isinstance(axis, Tuple), "axis must be a tuple"
@@ -577,8 +610,9 @@ class SpatialResize:
         self.size = size
 
     def __call__(
-        self, array: Union[np.ndarray, torch.Tensor]
-    ) -> Union[np.ndarray, torch.Tensor]:
+        self, array: Union[np.array, torch.tensor]
+    ) -> Union[np.array, torch.Tensor]:
+
         is_torch = False
         if isinstance(array, torch.Tensor):
             is_torch = True
@@ -677,9 +711,7 @@ class PolSAR(BaseTransform):
         >>> output = transform(input_data)  # Returns [HH, (HV+VH)/2, VV]
 
     Note:
-        - Input data should have format Channels x Height x Width (CHW) or 
-        a dictionnary of type {'polarization': np.ndarray, ...}
-        - By default, PolSAR always return HH polarization if out_channel is 1.
+        Input data should have format Channels x Height x Width (CHW) or a dictionnary of type {'polarization': np.ndarray, ...}
     """
 
     def __init__(self, out_channel: int) -> None:
@@ -777,6 +809,27 @@ class Unsqueeze(BaseTransform):
 
     def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
         return x.unsqueeze(dim=self.dim)
+    
+
+class HWC2CHW(BaseTransform):
+    """Converts an input array/tensor from HWC to CHW format.
+
+    This transform reorders the dimensions of the input array/tensor from Height x Width x Channel
+    to Channel x Height x Width format.
+
+    Returns:
+        np.ndarray | torch.Tensor: Input with dimensions reordered to Channel x Height x Width.
+
+    Example:
+        >>> transform = HWC2CHW()
+        >>> x = torch.randn(3, 4, 5)  # Shape (3, 4, 5)
+        >>> y = transform(x)          # Shape (5, 3, 4)
+    """
+    def __call_numpy__(self, x: np.ndarray) -> np.ndarray:
+        return np.moveaxis(x, -1, 0)
+    
+    def __call_torch__(self, x: torch.Tensor) -> torch.Tensor:
+        return x.permute(2, 0, 1)
 
 
 class ToTensor(BaseTransform):
